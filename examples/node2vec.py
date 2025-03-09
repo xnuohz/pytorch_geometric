@@ -1,14 +1,20 @@
-import os.path as osp
 import sys
+import time
 
 import matplotlib.pyplot as plt
 import torch
 from sklearn.manifold import TSNE
 
+from torch_geometric import seed_everything
 from torch_geometric.datasets import Planetoid
 from torch_geometric.nn import Node2Vec
 
-path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'Planetoid')
+wall_clock_start = time.perf_counter()
+seed_everything(123)
+
+dataset = 'Cora'
+# path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
+path = './data/Cora'
 dataset = Planetoid(path, name='Cora')
 data = dataset[0]
 
@@ -46,20 +52,41 @@ def train():
 def test():
     model.eval()
     z = model()
-    acc = model.test(
-        train_z=z[data.train_mask],
-        train_y=data.y[data.train_mask],
-        test_z=z[data.test_mask],
-        test_y=data.y[data.test_mask],
-        max_iter=150,
-    )
-    return acc
+    accs = []
+    for _, mask in data('train_mask', 'val_mask', 'test_mask'):
+        acc = model.test(
+            train_z=z[data.train_mask],
+            train_y=data.y[data.train_mask],
+            test_z=z[mask],
+            test_y=data.y[mask],
+            max_iter=150,
+        )
+        accs.append(acc)
+    return accs
 
 
+print(f'Total time before training begins took '
+      f'{time.perf_counter() - wall_clock_start:.4f}s')
+print('Training...')
+times = []
+best_val_acc = test_acc = 0
 for epoch in range(1, 101):
+    start = time.perf_counter()
     loss = train()
-    acc = test()
-    print(f'Epoch: {epoch:03d}, Loss: {loss:.4f}, Acc: {acc:.4f}')
+    train_acc, val_acc, tmp_test_acc = test()
+    if val_acc > best_val_acc:
+        best_val_acc = val_acc
+        test_acc = tmp_test_acc
+    print(f'Epoch: {epoch:03d}, Train: {train_acc:.4f}, '
+          f'Val: {best_val_acc:.4f}, Test: {test_acc:.4f}')
+    times.append(time.perf_counter() - start)
+
+print(f'Average Epoch Time: {torch.tensor(times).mean():.4f}s')
+print(f'Median Epoch Time: {torch.tensor(times).median():.4f}s')
+print(f'Best Validation Accuracy: {100.0 * best_val_acc:.2f}%')
+print(f'Test Accuracy: {100.0 * test_acc:.2f}%')
+print(f'Total Program Runtime: '
+      f'{time.perf_counter() - wall_clock_start:.4f}s')
 
 
 @torch.no_grad()
@@ -79,4 +106,4 @@ def plot_points(colors):
 colors = [
     '#ffc0cb', '#bada55', '#008080', '#420420', '#7fe5f0', '#065535', '#ffd700'
 ]
-plot_points(colors)
+# plot_points(colors)
