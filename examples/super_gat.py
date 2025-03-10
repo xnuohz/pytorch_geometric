@@ -30,6 +30,10 @@ class Net(torch.nn.Module):
                                   attention_type='MX', edge_sample_ratio=0.8,
                                   is_undirected=True)
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+        self.conv2.reset_parameters()
+
     def forward(self, x, edge_index):
         x = F.dropout(x, p=0.6, training=self.training)
         x = F.elu(self.conv1(x, edge_index))
@@ -42,6 +46,7 @@ class Net(torch.nn.Module):
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model, data = Net().to(device), data.to(device)
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=5e-4)
 
 

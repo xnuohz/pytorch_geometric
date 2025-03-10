@@ -25,6 +25,9 @@ class Net(torch.nn.Module):
         self.unet = GraphUNet(dataset.num_features, 32, dataset.num_classes,
                               depth=3, pool_ratios=pool_ratios)
 
+    def reset_parameters(self):
+        self.unet.reset_parameters()
+
     def forward(self):
         edge_index, _ = dropout_edge(data.edge_index, p=0.2,
                                      force_undirected=True,
@@ -37,6 +40,7 @@ class Net(torch.nn.Module):
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model, data = Net().to(device), data.to(device)
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0.001)
 
 

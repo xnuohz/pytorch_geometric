@@ -27,6 +27,7 @@ model = PMLP(
     norm=False,
 ).to(device)
 
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), weight_decay=5e-4, lr=0.01)
 
 

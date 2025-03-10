@@ -48,6 +48,10 @@ class GAT(torch.nn.Module):
         self.conv2 = GATConv(hidden_channels * heads, out_channels, heads=1,
                              concat=False, dropout=0.6)
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+        self.conv2.reset_parameters()
+
     def forward(self, x, edge_index):
         x = F.dropout(x, p=0.6, training=self.training)
         x = F.elu(self.conv1(x, edge_index))
@@ -58,6 +62,7 @@ class GAT(torch.nn.Module):
 
 model = GAT(dataset.num_features, args.hidden_channels, dataset.num_classes,
             args.heads).to(device)
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=5e-4)
 
 

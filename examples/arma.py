@@ -29,6 +29,10 @@ class Net(torch.nn.Module):
                               num_layers=2, shared_weights=True, dropout=0.25,
                               act=lambda x: x)
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+        self.conv2.reset_parameters()
+
     def forward(self, x, edge_index):
         x = F.dropout(x, training=self.training)
         x = F.relu(self.conv1(x, edge_index))
@@ -46,6 +50,7 @@ else:
 
 model, data = Net(dataset.num_features, 16,
                   dataset.num_classes).to(device), data.to(device)
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 
 

@@ -27,6 +27,9 @@ class Net(torch.nn.Module):
             cached=True,
         )
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+
     def forward(self):
         x, edge_index = data.x, data.edge_index
         x = self.conv1(x, edge_index)
@@ -41,6 +44,7 @@ else:
     device = torch.device('cpu')
 
 model, data = Net().to(device), data.to(device)
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.2, weight_decay=0.005)
 
 

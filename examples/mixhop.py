@@ -39,6 +39,15 @@ class MixHop(torch.nn.Module):
 
         self.lin = Linear(3 * 60, dataset.num_classes)
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+        self.norm1.reset_parameters()
+        self.conv2.reset_parameters()
+        self.norm2.reset_parameters()
+        self.conv3.reset_parameters()
+        self.norm3.reset_parameters()
+        self.lin.reset_parameters()
+
     def forward(self, x, edge_index):
         x = F.dropout(x, p=0.7, training=self.training)
 
@@ -58,6 +67,7 @@ class MixHop(torch.nn.Module):
 
 
 model, data = MixHop().to(device), data.to(device)
+model.reset_parameters()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.5, weight_decay=0.005)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=40,
                                             gamma=0.01)

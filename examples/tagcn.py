@@ -24,6 +24,10 @@ class Net(torch.nn.Module):
         self.conv1 = TAGConv(dataset.num_features, 16)
         self.conv2 = TAGConv(16, dataset.num_classes)
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+        self.conv2.reset_parameters()
+
     def forward(self):
         x, edge_index = data.x, data.edge_index
         x = F.relu(self.conv1(x, edge_index))
@@ -40,6 +44,7 @@ else:
     device = torch.device('cpu')
 
 model, data = Net().to(device), data.to(device)
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 
 

@@ -30,6 +30,7 @@ model = Node2Vec(
     q=1.0,
     sparse=True,
 ).to(device)
+model.reset_parameters()
 
 num_workers = 4 if sys.platform == 'linux' else 0
 loader = model.loader(batch_size=128, shuffle=True, num_workers=num_workers)

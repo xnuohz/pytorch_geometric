@@ -59,6 +59,10 @@ class GCN(torch.nn.Module):
         self.conv2 = GCNConv(hidden_channels, out_channels,
                              normalize=not args.use_gdc)
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+        self.conv2.reset_parameters()
+
     def forward(self, x, edge_index, edge_weight=None):
         x = F.dropout(x, p=0.5, training=self.training)
         x = self.conv1(x, edge_index, edge_weight).relu()
@@ -72,6 +76,7 @@ model = GCN(
     hidden_channels=args.hidden_channels,
     out_channels=dataset.num_classes,
 ).to(device)
+model.reset_parameters()
 
 optimizer = torch.optim.Adam([
     dict(params=model.conv1.parameters(), weight_decay=5e-4),

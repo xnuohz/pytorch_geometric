@@ -37,6 +37,12 @@ class Net(torch.nn.Module):
 
         self.dropout = dropout
 
+    def reset_parameters(self):
+        for lin in self.lins:
+            lin.reset_parameters()
+        for conv in self.convs:
+            conv.reset_parameters()
+
     def forward(self, x, adj_t):
         x = F.dropout(x, self.dropout, training=self.training)
         x = x_0 = self.lins[0](x).relu()
@@ -55,6 +61,7 @@ class Net(torch.nn.Module):
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = Net(hidden_channels=64, num_layers=64, alpha=0.1, theta=0.5,
             shared_weights=True, dropout=0.6).to(device)
+model.reset_parameters()
 data = data.to(device)
 optimizer = torch.optim.Adam([
     dict(params=model.convs.parameters(), weight_decay=0.01),
