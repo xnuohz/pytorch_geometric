@@ -33,6 +33,10 @@ class Net(torch.nn.Module):
         self.conv1 = SplineConv(dataset.num_features, 16, dim=1, kernel_size=2)
         self.conv2 = SplineConv(16, dataset.num_classes, dim=1, kernel_size=2)
 
+    def reset_parameters(self):
+        self.conv1.reset_parameters()
+        self.conv2.reset_parameters()
+
     def forward(self):
         x, edge_index, edge_attr = data.x, data.edge_index, data.edge_attr
         x = F.dropout(x, training=self.training)
@@ -44,6 +48,7 @@ class Net(torch.nn.Module):
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model, data = Net().to(device), data.to(device)
+model.reset_parameters()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-3)
 
 
