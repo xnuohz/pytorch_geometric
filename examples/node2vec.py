@@ -107,4 +107,4 @@ def plot_points(colors):
 colors = [
     '#ffc0cb', '#bada55', '#008080', '#420420', '#7fe5f0', '#065535', '#ffd700'
 ]
-# plot_points(colors)
+plot_points(colors)
