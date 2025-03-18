@@ -1,3 +1,4 @@
+import os.path as osp
 import time
 
 import torch
@@ -11,8 +12,7 @@ wall_clock_start = time.perf_counter()
 seed_everything(123)
 
 dataset = 'Cora'
-# path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
-path = './data/Cora'
+path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
 dataset = Planetoid(path, dataset)
 data = dataset[0]
 
