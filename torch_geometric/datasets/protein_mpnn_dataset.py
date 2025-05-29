@@ -24,10 +24,10 @@ class ProteinMPNNDataset(InMemoryDataset):
     Args:
         root (str): Root directory where the dataset should be saved.
         size (str): Size of the PDB information to train the model
-            If :obj:`"subsample"`, A subset of PDBs is used (229.4 MB).
-            If :obj:`"complete"`, The whole set  of PDBs from original paper 
+            If :obj:`"small"`, A subset of PDBs is used (229.4 MB).
+            If :obj:`"large"`, The whole set of PDBs from original paper 
                     is used (64.1 GB).
-            (default: :obj:`"subsample"`)
+            (default: :obj:`"small"`)
         split (str, optional): If :obj:`"train"`, loads the training dataset.
             If :obj:`"valid"`, loads the validation dataset.
             If :obj:`"test"`, loads the test dataset.
@@ -58,9 +58,9 @@ class ProteinMPNNDataset(InMemoryDataset):
             (default: :obj:`False`)
     """
 
-    raw_url = {'subsample':'https://files.ipd.uw.edu/pub/training_sets/'
+    raw_url = {'small':'https://files.ipd.uw.edu/pub/training_sets/'
                'pdb_2021aug02_sample.tar.gz',
-               'complete':'https://files.ipd.uw.edu/pub/training_sets/'
+               'large':'https://files.ipd.uw.edu/pub/training_sets/'
                'pdb_2021aug02.tar.gz'}
     
     splits = {
@@ -72,7 +72,7 @@ class ProteinMPNNDataset(InMemoryDataset):
     def __init__(
         self,
         root: str,
-        size: str = 'subsample',
+        size: str = 'small',
         split: str = 'train',
         datacut: str = '2030-01-01',
         rescut: float = 3.5,

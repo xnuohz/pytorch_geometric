@@ -234,8 +234,9 @@ if __name__ == '__main__':
     # dataset config
     parser.add_argument('--data_path', type=str, default='data/ProteinMPNN',
                         help='path for loading training data')
-    parser.add_argument('--size', type=str, default='subsample',
-                        help='Use of "subsample" or "complete" dataset')
+    parser.add_argument('--size', type=str, default='small',
+                        choices = ['small','large'],
+                        help='Use of "small (229.4 MB)" or "large (64.1 GB)" dataset')
     parser.add_argument('--max_protein_length', type=int, default=10000,
                         help='maximum length of the protein complext')
     parser.add_argument('--rescut', type=float, default=3.5,
