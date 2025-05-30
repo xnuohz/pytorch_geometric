@@ -3,6 +3,7 @@
 """
 import argparse
 import time
+import psutil
 import warnings
 
 import numpy as np
@@ -159,8 +160,12 @@ def main(args):
     scaler = torch.amp.GradScaler()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    if args.size == 'complete':
-        warnings.warn("The complete dataset weighs 64.1 GB", UserWarning)
+    if args.size == 'large' and psutil.virtual_memory().total < 64.1 * 1024**3:
+        warnings.warn(
+        (f"WARNING: Available system RAM ({psutil.virtual_memory().total / 1024**3:.2f} GB)" 
+        " is less than the dataset size (64.1 GB).\n"
+        "Consider freeing memory or using a machine with more available RAM.")
+        ,UserWarning)
         
     train_dataset = ProteinMPNNDataset(
         root=args.data_path,
@@ -235,7 +240,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, default='data/ProteinMPNN',
                         help='path for loading training data')
     parser.add_argument('--size', type=str, default='small',
-                        choices = ['small','large'],
+                        choices = ['small', 'large'],
                         help='Use of "small (229.4 MB)" or "large (64.1 GB)" dataset')
     parser.add_argument('--max_protein_length', type=int, default=10000,
                         help='maximum length of the protein complext')
