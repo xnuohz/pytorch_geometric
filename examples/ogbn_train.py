@@ -102,6 +102,31 @@ if args.add_self_loop:
     data.edge_index, _ = remove_self_loops(data.edge_index)
     data.edge_index, _ = add_self_loops(data.edge_index,
                                         num_nodes=data.num_nodes)
+"""
+sage + expand
+Average Epoch Time on training: 3.9512s
+Average Epoch Time on inference: 0.9969s
+Average Epoch Time: 4.9482s
+Median Epoch Time: 5.0389s
+Best Validation Accuracy: 67.97%
+Testing...
+Test Accuracy: 66.49%
+Total Program Runtime: 261.4594s
+
+sage
+Average Epoch Time on training: 2.5318s
+Average Epoch Time on inference: 0.6520s
+Average Epoch Time: 3.1839s
+Median Epoch Time: 3.2388s
+Best Validation Accuracy: 71.53%
+Testing...
+Test Accuracy: 70.42%
+Total Program Runtime: 160.9739s
+"""
+# transform = T.Compose([T.AddExpanderEdges(degree=2), T.VirtualNode(),])
+# data = transform(data)
+
+# import pdb; pdb.set_trace()
 
 data.to(device, 'x', 'y')
 

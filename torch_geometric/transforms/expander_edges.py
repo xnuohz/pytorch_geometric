@@ -5,20 +5,20 @@ from torch_geometric.data.datapipes import functional_transform
 from torch_geometric.transforms import BaseTransform
 
 
-@functional_transform('random_regular_expander_edges')
-class RandomRegularExpanderEdges(BaseTransform):
+@functional_transform('add_expander_edges')
+class AddExpanderEdges(BaseTransform):
     r"""Generates a random 2d-regular graph with n nodes
     using permutations algorithm.
     Returns the list of edges. This list is symmetric; i.e., if
     (x, y) is an edge so is (y,x).
 
     Args:
-            degree: Desired degree.
+        degree: Desired degree.
 
     Returns:
-            data: Data.
+        data: Data object with added expander edges.
     """
-    def __init__(self, degree: int = 4):
+    def __init__(self, degree: int = 3):
         self.degree = degree
 
     def forward(self, data: Data) -> Data:
@@ -43,7 +43,15 @@ class RandomRegularExpanderEdges(BaseTransform):
         receivers = np.array(receivers)[non_loops]
         senders = torch.tensor(senders, dtype=torch.long)
         receivers = torch.tensor(receivers, dtype=torch.long)
-        data.expand_edge_index = torch.stack([senders, receivers], dim=0)
-        import pdb
-        pdb.set_trace()
+        expand_edge_index = torch.stack([senders, receivers], dim=0)
+
+        combined_edges = torch.cat([data.edge_index, expand_edge_index], dim=1)
+        edges_set = set()
+        for i in range(combined_edges.shape[1]):
+            node1, node2 = combined_edges[0,
+                                          i].item(), combined_edges[1,
+                                                                    i].item()
+            edges_set.add((node1, node2))
+        data.edge_index = torch.tensor(list(edges_set)).t()
+
         return data

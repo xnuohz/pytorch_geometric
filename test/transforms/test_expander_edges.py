@@ -1,11 +1,11 @@
 import torch
 
 from torch_geometric.data import Data
-from torch_geometric.transforms import RandomRegularExpanderEdges
+from torch_geometric.transforms import AddExpanderEdges
 
 
-def test_line_graph():
-    transform = RandomRegularExpanderEdges()
+def test_add_expander_edges():
+    transform = AddExpanderEdges()
 
     # Directed.
     edge_index = torch.tensor([
@@ -14,7 +14,4 @@ def test_line_graph():
     ])
     data = Data(edge_index=edge_index, num_nodes=4)
     data = transform(data)
-    assert data.expand_edge_index == torch.tensor([
-        [0, 1, 0, 1, 2, 3, 0, 2, 0, 1, 1, 0, 1, 3, 0, 2, 2, 0, 1, 0],
-        [1, 0, 1, 3, 0, 2, 2, 0, 1, 0, 0, 1, 0, 1, 2, 3, 0, 2, 0, 1],
-    ])
+    assert data.edge_index.size() == (2, 6)

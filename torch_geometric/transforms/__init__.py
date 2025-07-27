@@ -13,7 +13,7 @@ from .random_link_split import RandomLinkSplit
 from .node_property_split import NodePropertySplit
 from .mask import IndexToMask, MaskToIndex
 from .pad import Pad
-from .expander_edges import RandomRegularExpanderEdges
+from .expander_edges import AddExpanderEdges
 
 from .to_undirected import ToUndirected
 from .one_hot_degree import OneHotDegree
