@@ -111,7 +111,8 @@ def test_glem_initialization(glem_model):
     assert glem_model.lm.num_labels == 3
 
 
-@withPackage('transformers', 'sentencepiece', 'accelerate', 'pyg_lib', 'torch_sparse')
+@withPackage('transformers', 'sentencepiece', 'accelerate', 'pyg_lib',
+             'torch_sparse')
 @pytest.mark.parametrize('is_augmented', [True, False])
 def test_glem_pretrain(glem_model, tiny_graph_data, dummy_text_data,
                        is_augmented):
@@ -146,7 +147,8 @@ def test_glem_pretrain(glem_model, tiny_graph_data, dummy_text_data,
     )
 
 
-@withPackage('transformers', 'sentencepiece', 'accelerate', 'pyg_lib', 'torch_sparse')
+@withPackage('transformers', 'sentencepiece', 'accelerate', 'pyg_lib',
+             'torch_sparse')
 @pytest.mark.parametrize('is_augmented', [True, False])
 def test_glem_train(glem_model, tiny_graph_data, dummy_text_data,
                     is_augmented):
@@ -187,7 +189,8 @@ def test_glem_train(glem_model, tiny_graph_data, dummy_text_data,
     assert loss >= 0
 
 
-@withPackage('transformers', 'sentencepiece', 'accelerate', 'pyg_lib', 'torch_sparse')
+@withPackage('transformers', 'sentencepiece', 'accelerate', 'pyg_lib',
+             'torch_sparse')
 def test_glem_inference(glem_model, tiny_graph_data, dummy_text_data):
     # Test LM inference
     preds = glem_model.inference('lm', dummy_text_data, verbose=True)

@@ -199,6 +199,7 @@ class TestRAGQueryLoader:
         assert hasattr(result, 'filtered')
         assert result.filtered is True
 
+
 @withPackage('pyg_lib', 'torch_sparse')
 def test_rag_loader_integration(tmp_path):
     """Test RAGQueryLoader with real feature and graph stores from triples."""
