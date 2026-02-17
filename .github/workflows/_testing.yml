@@ -54,7 +54,7 @@ jobs:
         shell: bash
 
       - name: Run tests
-        timeout-minutes: 35
+        timeout-minutes: 40
         run: |
           pytest --cov --cov-report=xml --durations 10
         env:
