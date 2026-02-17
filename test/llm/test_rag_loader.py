@@ -16,6 +16,7 @@ from torch_geometric.llm.utils.feature_store import KNNRAGFeatureStore
 from torch_geometric.llm.utils.graph_store import NeighborSamplingRAGGraphStore
 from torch_geometric.llm.utils.vectorrag import VectorRetriever
 from torch_geometric.sampler import SamplerOutput
+from torch_geometric.testing import withPackage
 
 
 class MockRAGFeatureStore:
@@ -198,7 +199,7 @@ class TestRAGQueryLoader:
         assert hasattr(result, 'filtered')
         assert result.filtered is True
 
-
+@withPackage('pyg_lib', 'torch_sparse')
 def test_rag_loader_integration(tmp_path):
     """Test RAGQueryLoader with real feature and graph stores from triples."""
     # Define test triplets - simple knowledge graph about cities/countries
