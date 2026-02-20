@@ -9,7 +9,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- Improved `.llm` code coverage ([#10516](https://github.com/pyg-team/pytorch_geometric/pull/10516))
 - Dropped support for TorchScript in `GATConv` and `GATv2Conv` for correctness ([#10596](https://github.com/pyg-team/pytorch_geometric/pull/10596))
 
 ### Deprecated
