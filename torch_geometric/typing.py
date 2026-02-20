@@ -1,18 +1,12 @@
 import inspect
 import os
-import sys
 import typing
 import warnings
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, TypeAlias, Union
 
 import numpy as np
 import torch
 from torch import Tensor
-
-try:
-    from typing import TypeAlias  # type: ignore
-except ImportError:
-    from typing_extensions import TypeAlias
 
 WITH_PT20 = int(torch.__version__.split('.')[0]) >= 2
 WITH_PT21 = WITH_PT20 and int(torch.__version__.split('.')[1]) >= 1
@@ -48,7 +42,8 @@ try:
     WITH_PYG_LIB = True
     WITH_GMM = WITH_PT20 and hasattr(pyg_lib.ops, 'grouped_matmul')
     WITH_SEGMM = hasattr(pyg_lib.ops, 'segment_matmul')
-    if WITH_SEGMM and 'pytest' in sys.modules and torch.cuda.is_available():
+    if (WITH_SEGMM and 'PYTEST_CURRENT_TEST' in os.environ
+            and torch.cuda.is_available()):
         # NOTE `segment_matmul` is currently bugged on older NVIDIA cards which
         # let our GPU tests on CI crash. Try if this error is present on the
         # current GPU and disable `WITH_SEGMM`/`WITH_GMM` if necessary.
@@ -98,7 +93,7 @@ except Exception as e:
     WITH_CUDA_HASH_MAP = False
 
 if WITH_CPU_HASH_MAP:
-    CPUHashMap: TypeAlias = torch.classes.pyg.CPUHashMap
+    CPUHashMap: TypeAlias = torch.classes.pyg.CPUHashMap  # type: ignore[name-defined]  # noqa: E501
 else:
 
     class CPUHashMap:  # type: ignore
@@ -110,7 +105,7 @@ else:
 
 
 if WITH_CUDA_HASH_MAP:
-    CUDAHashMap: TypeAlias = torch.classes.pyg.CUDAHashMap
+    CUDAHashMap: TypeAlias = torch.classes.pyg.CUDAHashMap  # type: ignore[name-defined]  # noqa: E501
 else:
 
     class CUDAHashMap:  # type: ignore

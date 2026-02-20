@@ -1,5 +1,6 @@
 import bz2
 import gzip
+import os
 import os.path as osp
 import sys
 import tarfile
@@ -7,7 +8,7 @@ import zipfile
 
 
 def maybe_log(path: str, log: bool = True) -> None:
-    if log and 'pytest' not in sys.modules:
+    if log and 'PYTEST_CURRENT_TEST' not in os.environ:
         print(f'Extracting {path}', file=sys.stderr)
 
 
@@ -28,7 +29,7 @@ def extract_tar(
     """
     maybe_log(path, log)
     with tarfile.open(path, mode) as f:
-        f.extractall(folder)
+        f.extractall(folder, filter='data')
 
 
 def extract_zip(path: str, folder: str, log: bool = True) -> None:

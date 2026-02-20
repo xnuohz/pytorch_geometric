@@ -4,7 +4,7 @@ import torch
 import torch_geometric.typing
 
 from ._compile import compile, is_compiling
-from ._onnx import is_in_onnx_export
+from ._onnx import is_in_onnx_export, safe_onnx_export
 from .index import Index
 from .edge_index import EdgeIndex
 from .hash_tensor import HashTensor
@@ -31,7 +31,7 @@ from .lazy_loader import LazyLoader
 contrib = LazyLoader('contrib', globals(), 'torch_geometric.contrib')
 graphgym = LazyLoader('graphgym', globals(), 'torch_geometric.graphgym')
 
-__version__ = '2.7.0'
+__version__ = '2.8.0'
 
 __all__ = [
     'Index',
@@ -43,6 +43,7 @@ __all__ = [
     'compile',
     'is_compiling',
     'is_in_onnx_export',
+    'safe_onnx_export',
     'is_mps_available',
     'is_xpu_available',
     'device',

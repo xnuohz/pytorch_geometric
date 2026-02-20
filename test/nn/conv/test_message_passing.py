@@ -9,7 +9,7 @@ from torch.nn import Linear
 
 import torch_geometric.typing
 from torch_geometric import EdgeIndex
-from torch_geometric.nn import GATConv, MessagePassing, aggr
+from torch_geometric.nn import MessagePassing, aggr
 from torch_geometric.typing import (
     Adj,
     OptPairTensor,
@@ -167,7 +167,8 @@ class MyCommentedConv(MessagePassing):
 
 
 def test_my_commented_conv():
-    # Check that `self.propagate` occurences in comments are correctly ignored.
+    # Check that `self.propagate` occurrences in comments are correctly
+    # ignored.
     x = torch.randn(4, 8)
     edge_index = torch.tensor([[0, 1, 2, 3], [0, 0, 1, 1]])
 
@@ -731,11 +732,10 @@ def test_traceable_my_conv_with_self_loops(num_nodes):
 
 def test_pickle(tmp_path):
     path = osp.join(tmp_path, 'model.pt')
-    model = GATConv(16, 32)
+    model = MyConv(16, 32)
     torch.save(model, path)
 
-    GATConv.propagate = GATConv._orig_propagate
-    GATConv.edge_updater = GATConv._orig_edge_updater
+    MyConv.propagate = MyConv._orig_propagate
 
     model = torch.load(path, weights_only=False)
     torch.jit.script(model)
