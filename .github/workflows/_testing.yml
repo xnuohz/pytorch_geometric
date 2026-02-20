@@ -6,6 +6,9 @@ on:  # yamllint disable-line rule:truthy
       test-matrix:
         type: string
         required: true
+      timeout-minutes:
+        type: int
+        required: true
 
 
 defaults:
@@ -54,7 +57,7 @@ jobs:
         shell: bash
 
       - name: Run tests
-        timeout-minutes: ${{ inputs.timeout }}
+        timeout-minutes: ${{ inputs.timeout-minutes }}
         run: |
           pytest --cov --cov-report=xml --durations 10
         env:
